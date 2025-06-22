@@ -5,7 +5,20 @@ import tensorflow as tf
 from streamlit_drawable_canvas import st_canvas
 
 # Load trained model
-model = tf.keras.models.load_model("mnist_cnn.h5")
+def build_model():
+    return tf.keras.Sequential([
+        tf.keras.layers.InputLayer(input_shape=(28, 28, 1), name="input_layer"),
+        tf.keras.layers.Conv2D(32, (3,3), activation='relu'),
+        tf.keras.layers.MaxPooling2D((2,2)),
+        tf.keras.layers.Conv2D(64, (3,3), activation='relu'),
+        tf.keras.layers.MaxPooling2D((2,2)),
+        tf.keras.layers.Flatten(),
+        tf.keras.layers.Dense(100, activation='relu'),
+        tf.keras.layers.Dense(10, activation='softmax'),
+    ])
+
+model = build_model()
+model.load_weights("mnist_weights.weights.h5")
 
 st.title("Digit Classifier (MNIST)")
 st.write("Upload a 28x28 image or draw your own digit below:")
